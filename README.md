@@ -20,4 +20,5 @@ https://github.com/joshuamschmidt/ncd_scores/raw/master/abelii_ncd.log10p_ucsc.t
 https://github.com/joshuamschmidt/ncd_scores/raw/master/pygmaeus_ncd.log10p_ucsc.track.bw
 
 
-** Note: for some reason converting from bedGraph to bigwig lost the defsult settings I made for the visualisation. User still has to manually change each track: full, 30 px, user defined range but I like 0 - 2 ( p < 0.01 ) or 0-10.
+** Note: for some reason converting from bedGraph to bigwig lost the default settings I made for the visualisation. 
+User still has to manually change each track: full, 30 px, user defined range, but I like 0 - 2 ( p < 0.01 ) or 0-10.
