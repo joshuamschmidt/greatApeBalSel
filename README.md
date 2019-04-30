@@ -19,6 +19,7 @@ https://github.com/joshuamschmidt/ncd_scores/raw/master/abelii_ncd.log10p_ucsc.t
 
 https://github.com/joshuamschmidt/ncd_scores/raw/master/pygmaeus_ncd.log10p_ucsc.track.bw
 
-
+coordinates are the central 100bp for each window.
+score is -log10(pvalue)
 ** Note: for some reason converting from bedGraph to bigwig lost the default settings I made for the visualisation. 
 User still has to manually change each track: full, 30 px, user defined range, but I like 0 - 2 ( p < 0.01 ) or 0-10.
