@@ -1,5 +1,6 @@
 # ncd_scores
-paste this into the UCSC custom track config: https://genome.ucsc.edu/cgi-bin/hgCustom
+paste the links below into the UCSC custom track config: https://genome.ucsc.edu/cgi-bin/hgCustom
+
 
 https://github.com/joshuamschmidt/ncd_scores/raw/master/bonobo_ncd.log10p_ucsc.track.bw
 
