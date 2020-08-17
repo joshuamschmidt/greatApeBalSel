@@ -6,11 +6,11 @@ track type=bigWig name="bonobo" description="NCD_bonobo" color="0,0,128" autoSca
 
 track type=bigWig name="nigeria" description="NCD_NC_chimp" color="123,104,238" autoScale=off alwaysZero=on visibility=2 viewLimits=0:10 yLineMark=3.3 yLineOnOff=on maxHeightPixels=30:30:30 bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/ellioti_ncd.log10p_ucsc.track.bw
 
-track type=bigWig name="western" description="NCD_western_chimp" color="72,61,139" autoScale=off alwaysZero=on visibility=2 viewLimits=0:10 yLineMark=3.3 yLineOnOff=on maxHeightPixels=30:30:30 bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/verus_ncd.log10p_ucsc.track.bw
-
 track type=bigWig name="eastern" description="NCD_eastern_chimp" color="70,130,180" autoScale=off alwaysZero=on visibility=2 viewLimits=0:10 yLineMark=3.3 yLineOnOff=on maxHeightPixels=30:30:30 bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/schweinfurthii_ncd.log10p_ucsc.track.bw
 
 track type=bigWig name="central" description="NCD_central_chimp" color="30,144,255" autoScale=off alwaysZero=on visibility=2 viewLimits=0:10 yLineMark=3.3 yLineOnOff=on maxHeightPixels=30:30:30 bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/troglodytes_ncd.log10p_ucsc.track.bw
+
+track type=bigWig name="western" description="NCD_western_chimp" color="72,61,139" autoScale=off alwaysZero=on visibility=2 viewLimits=0:10 yLineMark=3.3 yLineOnOff=on maxHeightPixels=30:30:30 bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/verus_ncd.log10p_ucsc.track.bw
 
 track type=bigWig name="gorilla" description="NCD_western_llg" color="255,69,0" autoScale=off alwaysZero=on visibility=2 viewLimits=0:10 yLineMark=3.3 yLineOnOff=on maxHeightPixels=30:30:30 bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/gorilla_ncd.log10p_ucsc.track.bw
 
@@ -23,5 +23,3 @@ track type=bigWig name="pygmaeus" description="NCD_bornean_orang" color="220,20,
 
 coordinates are the central 100bp for each window.
 score is -log10(pvalue)
-** Note: for some reason converting from bedGraph to bigwig lost the default settings I made for the visualisation. 
-User still has to manually change each track: full, 30 px, user defined range, but I like 0 - 2 ( p < 0.01 ) or 0-10. Otherwise the NCD values are indicated by the intenisty of shading, which is more difficult to parse visually.
