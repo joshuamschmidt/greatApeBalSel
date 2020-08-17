@@ -1,0 +1,9 @@
+# Intermediate files #
+###################
+*.bedGraph
+*.bedGraph.sorted
+
+# bin dir #
+###################
+bin/
+
