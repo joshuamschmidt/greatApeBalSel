@@ -3,13 +3,21 @@ paste the links below into the UCSC custom track config: https://genome.ucsc.edu
 
 
 track type=bigWig name="bonobo" description="NCD_bonobo" bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/bonobo_ncd.log10p_ucsc.track.bw
+
 track type=bigWig name="nigeria" description="NCD_NC_chimp" bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/ellioti_ncd.log10p_ucsc.track.bw
+
 track type=bigWig name="western" description="NCD_western_chimp" bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/verus_ncd.log10p_ucsc.track.bw
+
 track type=bigWig name="eastern" description="NCD_eastern_chimp" bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/schweinfurthii_ncd.log10p_ucsc.track.bw
+
 track type=bigWig name="central" description="NCD_central_chimp" bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/troglodytes_ncd.log10p_ucsc.track.bw
+
 track type=bigWig name="gorilla" description="NCD_western_llg" bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/gorilla_ncd.log10p_ucsc.track.bw
+
 track type=bigWig name="graueri" description="NCD_eastern_llg" bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/graueri_ncd.log10p_ucsc.track.bw
+
 track type=bigWig name="abelii" description="NCD_sumatran_orang" bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/abelii_ncd.log10p_ucsc.track.bw
+
 track type=bigWig name="pygmaeus" description="NCD_bornean_orang" bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/pygmaeus_ncd.log10p_ucsc.track.bw
 
 
