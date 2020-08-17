@@ -2,10 +2,10 @@
 library(data.table)
 datasuffix="_all_great_apes_ncd_scan_results_data.table.rds"
 outgroup="human"
-basedir="/Users/joshua_schmidt/Downloads/"
+basedir="/Users/joshuaschmidt/Projects/ncd_greatApe/scan_results/"
 speciesNCDTablesDT <- readRDS(paste(basedir,outgroup,datasuffix,sep=""))
 ## need to add hg19 coordiantes....
-setwd("/Users/joshua_schmidt/Documents/EVA_work/joao_NCD_greatApes/repeat_scan/enrichments/")
+setwd("/Users/joshuaschmidt/Projects/ncd_greatApe/hg19_windows")
 id.window.coords <- readRDS("human.window.coords.hg19.rds")
 setkey(id.window.coords,id)
 setwd("/Users/joshua_schmidt/Documents/EVA_work/joao_NCD_greatApes/repeat_scan/ucsc_tracks")
