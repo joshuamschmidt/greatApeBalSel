@@ -2,8 +2,7 @@
 paste the links below into the UCSC custom track config: https://genome.ucsc.edu/cgi-bin/hgCustom
 
 
-track type=bigWig name="bonobo" description="NCD_bonobo" color="0,0,128" autoScale=off alwaysZero=on visibility=2 viewLimits=0:6:wq
- yLineMark=3.3 yLineOnOff=on maxHeightPixels=30:30:30 bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/bonobo_ncd.log10p_ucsc.track.bw
+track type=bigWig name="bonobo" description="NCD_bonobo" color="0,0,128" autoScale=off alwaysZero=on visibility=2 viewLimits=0:6 yLineMark=3.3 yLineOnOff=on maxHeightPixels=30:30:30 bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/bonobo_ncd.log10p_ucsc.track.bw
 
 track type=bigWig name="nigeria" description="NCD_NC_chimp" color="123,104,238" autoScale=off alwaysZero=on visibility=2 viewLimits=0:6 yLineMark=3.3 yLineOnOff=on maxHeightPixels=30:30:30 bigDataUrl=https://raw.githubusercontent.com/joshuamschmidt/ncd_scores/master/bigWig/ellioti_ncd.log10p_ucsc.track.bw
 
