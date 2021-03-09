@@ -36,10 +36,10 @@ outdir <- "/Users/joshuaschmidt/Projects/greatApeBalSel/ncd_scores/scan_results_
 ```
 
 ```{r loop over species and output compressed fulldata, echo=FALSE}
-species <- data[,unique(species)]
+species <- names(data)
 for (sp in species){
-  outfile <- paste0(outdir,sp,"_trimmed_data.table.rds")
-  saveRDS(data[species==sp], outfile,compress='xz')
+  outfile <- paste0(outdir,sp,"_full_data.table.rds")
+  saveRDS(data[[sp]], outfile,compress='xz')
 }
 
 
