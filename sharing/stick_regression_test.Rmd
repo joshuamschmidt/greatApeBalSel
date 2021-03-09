@@ -1,0 +1,39 @@
+---
+title: "Untitled"
+author: "Joshua Schmidt"
+date: "09/03/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### segemented regression analysis
+```{r libraries}
+library(data.table)
+library(segmented)
+```
+
+```{r data}
+results <- readRDS("/Users/joshuaschmidt/Projects/ncd_greatApe/scan_results/human_all_great_apes_ncd_scan_new.callable.filter.rds")
+
+species <- sort(names(results))
+linear_models <- list()
+segmented_models <- list()
+for (i in 1:(length(species)-1)){
+  for (j in (i+1):length(species)){
+    s1 <- species[i]
+    s2 <- species[j]
+    s1r <- results[[s1]][ncd2Filt=="y"][!ncd2Z %in% NA][order(id)]
+    s2r <- results[[s2]][ncd2Filt=="y"][!ncd2Z %in% NA][order(id)]
+    common <- intersect(s1r$id,s2r$id)
+    s1r <- s1r[id %in% common]$ncd2Z
+    s2r <- s2r[id %in% common]$ncd2Z
+    # Fit linear model
+    linear_models[[paste0(s1,"_",s2)]] <- lm(s1r ~ s2r)
+    segmented_models[[paste0(s1,"_",s2)]] <- selgmented(linear_models[[paste0(s1,"_",s2)]],type='bic')
+  }
+}
+  
+```

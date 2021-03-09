@@ -1,0 +1,47 @@
+---
+title: "Spltting_ncd_scan"
+author: "Joshua Schmidt"
+date: "10/03/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Split NCD scan results for backup/sharing of data: trimmed tables
+```{r data in and setup dir info, echo=FALSE}
+library(data.table)
+indir <- "/Users/joshuaschmidt/Projects/ncd_greatApe/scan_results/" 
+data <- readRDS(paste0(indir,"human_all_great_apes_ncd_scan_results_data.table.rds"))
+outdir <- "/Users/joshuaschmidt/Projects/greatApeBalSel/ncd_scores/scan_results_R/"
+```
+
+```{r loop over species and output compressed data, echo=FALSE}
+species <- data[,unique(species)]
+for (sp in species){
+  outfile <- paste0(outdir,sp,"_trimmed_data.table.rds")
+  saveRDS(data[species==sp], outfile,compress='xz')
+}
+
+
+```
+
+
+## Split NCD scan results for backup/sharing of data: FULL tables
+```{r full data in and setup dir info, echo=FALSE}
+indir <- "/Users/joshuaschmidt/Projects/ncd_greatApe/scan_results/" 
+data <- readRDS(paste0(indir,"human_all_great_apes_ncd_scan_new.callable.filter.rds"))
+outdir <- "/Users/joshuaschmidt/Projects/greatApeBalSel/ncd_scores/scan_results_R/"
+```
+
+```{r loop over species and output compressed fulldata, echo=FALSE}
+species <- data[,unique(species)]
+for (sp in species){
+  outfile <- paste0(outdir,sp,"_trimmed_data.table.rds")
+  saveRDS(data[species==sp], outfile,compress='xz')
+}
+
+
+```
+
