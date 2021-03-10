@@ -9,18 +9,72 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Gene definitions
-```{r}
+## Get VIPs
+```{r VIPs, echo=FALSE}
+htvips <- fread("/Users/joshuaschmidt/Projects/highthroughput_VIPs/ht_vips.txt")
+ltvips <- fread("/Users/joshuaschmidt/Projects/highthroughput_VIPs/lt_vips.txt",col.names = c("ens_id","interactions"))
+```
 
+#### have to get ens ids for ltvips
+```{r ens ids for ltvips}
+fwrite(x=ltvips[,.(ens_id)],
+       file="/Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/ltvips_ensIds.txt",
+       sep="\n",
+       quote=F,
+       col.names = F,
+       row.names = F
+)
 ```
 
 
-## Define VIPs
-```{r VIPs, echo=FALSE}
-htvips <- fread("/Users/joshuaschmidt/Projects/highthroughput_VIPs/ht_vips.txt")
-ltvips <- fread("/Users/joshuaschmidt/Projects/highthroughput_VIPs/lt_vips.txt")
+## Gene definitions
+```{r}
+genes <- fread(input = "/Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/hg19_nonRedundant_GOWINDA_noORS.bed",col.names = c("chr","start","end","name"))
+
+ens_name <- fread("/Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/ltvips_ensIds_gene.names.txt",
+                  col.names = c("ens_id","name"))
+genes <-  genes[ens_name,on=.(name)][!chr%in% NA][!ens_id %in% NA]
+genes[genes[,duplicated(name)]]
+```
+
+```{r refine VIPS}
+ltvips <- ltvips[genes,on=.(ens_id)]
+# viruses in the ltvips
+ltviruses <- fread("/Users/joshuaschmidt/Projects/highthroughput_VIPs/lt_vips_vviruses.txt",header=FALSE)
+ltviruses <- ltviruses[!grep(pattern = "SSRNART|ssRNART|dsRNA|dsDNA|dsrna|dsdna|ssRNA|ssrna|ssDNA|ssdna|^rna|^dna",V1,)]
+
+lt_names <- toupper(ltviruses$V1)
+
+ht_names <- names(htvips)[2:length(names(htvips))]
+ht_names[2] <- "CORONAVIRUS"
+
+for (htv in ht_names){
+  genes[ens_id %in% htvips[,get(htv)]]
+}
 
 
-ltvips <- ltvips[`Ensembl Gene ID` %in% genes$human.ens]
+
+# ltvip table long
+ltvipDT <- data.table()
+ltvipcount = 0
+
+for (ltv in ltviruses$V1) {
+  ltvipcount = ltvipcount +1
+  grepstring <- paste("\\b",ltv,"\\b",sep="")
+  ltvgenes <- unique(sort(ltvips[grep(eval(grepstring),interactions)]$name))
+  if (length(ltvgenes >=1)) {
+    tmpDT <- data.table(cat=paste0("ltvip:",sprintf("%07d", ltvipcount)),
+                      name=toupper(ltv),
+                      genes=paste(ltvgenes,collapse = " "))
+    ltvipDT <- rbindlist(list(ltvipDT,tmpDT))
+  }
+}
+```
+
+
+```{r map and combine HTVIPs and LTVIPS}
+
+
+
 ```
 
