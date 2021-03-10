@@ -15,7 +15,7 @@ htvips <- fread("/Users/joshuaschmidt/Projects/highthroughput_VIPs/ht_vips.txt")
 ltvips <- fread("/Users/joshuaschmidt/Projects/highthroughput_VIPs/lt_vips.txt",col.names = c("ens_id","interactions"))
 ```
 
-#### have to get ens ids for ltvips
+#### have to get ens ids for ltvips and htvips
 ```{r ens ids for ltvips}
 fwrite(x=ltvips[,.(ens_id)],
        file="/Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/ltvips_ensIds.txt",
@@ -24,6 +24,17 @@ fwrite(x=ltvips[,.(ens_id)],
        col.names = F,
        row.names = F
 )
+fwrite(x=htvips[,.(all)],
+       file="/Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/htvips_ensIds.txt",
+       sep="\n",
+       quote=F,
+       col.names = F,
+       row.names = F
+)
+```
+
+```{bash}
+cat /Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/htvips_ensIds_gene.names.txt /Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/ltvips_ensIds_gene.names.txt | sort | uniq | sed '/stable/d' > /Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/allvips_ensIds_gene.names.txt
 ```
 
 
@@ -31,8 +42,7 @@ fwrite(x=ltvips[,.(ens_id)],
 ```{r}
 genes <- fread(input = "/Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/hg19_nonRedundant_GOWINDA_noORS.bed",col.names = c("chr","start","end","name"))
 
-ens_name <- fread("/Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/ltvips_ensIds_gene.names.txt",
-                  col.names = c("ens_id","name"))
+ens_name <- fread("/Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/allvips_ensIds_gene.names.txt", col.names = c("ens_id","name"))
 genes <-  genes[ens_name,on=.(name)][!chr%in% NA][!ens_id %in% NA]
 genes[genes[,duplicated(name)]]
 ```
@@ -47,9 +57,8 @@ lt_names <- toupper(ltviruses$V1)
 
 ht_names <- names(htvips)[2:length(names(htvips))]
 ht_names[2] <- "CORONAVIRUS"
-
 for (htv in ht_names){
-  genes[ens_id %in% htvips[,get(htv)]]
+  genes[ens_id %in% htvips[,.(get(htv))][grep("ENSG",V1)]$V1]
 }
 
 
