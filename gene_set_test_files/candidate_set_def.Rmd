@@ -1,0 +1,43 @@
+---
+title: "Single species bed files"
+author: "Joshua Schmidt"
+date: "10/03/2021"
+output: html_document
+---
+---
+title: "Spltting_ncd_scan"
+author: "Joshua Schmidt"
+date: "10/03/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Variant files for single species background and candidate windows
+```{r full data in and setup dir info, echo=FALSE}
+indir <- "/Users/joshuaschmidt/Projects/ncd_greatApe/scan_results/" 
+data <- readRDS(paste0(indir,"human_all_great_apes_ncd_scan_new.callable.filter.rds"))
+outdir <- "/Users/joshuaschmidt/Projects/greatApeBalSel/gene_set_test_files/"
+```
+
+```{r loop over species and output variant txt file with hg19 coordinates, echo=FALSE}
+species <- names(data)
+for (sp in species){
+  outfile <- paste0(outdir,sp,"_background_windows.txt")
+  fwrite(x= data[[sp]][!ncd1Zp %in% NA,.(chr,start=hg19start+1,end=hg19end)][order(chr,start)],
+         file=outfile,
+         col.names = T,
+         row.names = F,
+         quote = F,
+         sep="\t")
+  outfile <- paste0(outdir,sp,"_candidate_windows.txt")
+  fwrite(x= data[[sp]][ncd2Zp < 0.005][!ncd1Zp %in% NA,.(chr,start=hg19start+1,end=hg19end)][order(chr,start)],
+         file=outfile,
+         col.names = T,
+         row.names = F,
+         quote = F,
+         sep="\t")
+}
+```
