@@ -9,10 +9,15 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r libs}
+library(data.table)
+```
+
+
 ## Get VIPs
 ```{r VIPs, echo=FALSE}
-htvips <- fread("/Users/joshuaschmidt/Projects/highthroughput_VIPs/ht_vips.txt")
-ltvips <- fread("/Users/joshuaschmidt/Projects/highthroughput_VIPs/lt_vips.txt",col.names = c("ens_id","interactions"))
+htvips <- fread("~/Projects/highthroughput_VIPs/ht_vips.txt")
+ltvips <- fread("~/Projects/highthroughput_VIPs/lt_vips.txt",col.names = c("ens_id","interactions"))
 ```
 
 #### have to get ens ids for ltvips and htvips
