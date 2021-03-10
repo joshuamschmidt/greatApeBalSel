@@ -41,7 +41,4 @@ for (sp in species){
   outfile <- paste0(outdir,sp,"_full_data.table.rds")
   saveRDS(data[[sp]], outfile,compress='xz')
 }
-
-
 ```
-
