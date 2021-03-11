@@ -16,21 +16,21 @@ library(data.table)
 
 ## Get VIPs
 ```{r VIPs, echo=FALSE}
-htvips <- fread("~/Projects/highthroughput_VIPs/ht_vips.txt")
-ltvips <- fread("~/Projects/highthroughput_VIPs/lt_vips.txt",col.names = c("ens_id","interactions"))
+htvips <- fread("ht_vips.txt")
+ltvips <- fread("lt_vips.txt",col.names = c("ens_id","interactions"))
 ```
 
 #### have to get ens ids for ltvips and htvips
 ```{r ens ids for ltvips}
 fwrite(x=ltvips[,.(ens_id)],
-       file="/Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/ltvips_ensIds.txt",
+       file="../gene_annotations/ltvips_ensIds.txt",
        sep="\n",
        quote=F,
        col.names = F,
        row.names = F
 )
 fwrite(x=htvips[,.(all)],
-       file="/Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/htvips_ensIds.txt",
+       file="../gene_annotations/htvips_ensIds.txt",
        sep="\n",
        quote=F,
        col.names = F,
@@ -39,17 +39,16 @@ fwrite(x=htvips[,.(all)],
 ```
 
 ```{bash}
-cat /Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/htvips_ensIds_gene.names.txt /Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/ltvips_ensIds_gene.names.txt | sort | uniq | sed '/stable/d' > /Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/allvips_ensIds_gene.names.txt
+cat ../gene_annotations/htvips_ensIds_gene.names.txt ../gene_annotations/ltvips_ensIds_gene.names.txt | sort | uniq | sed '/stable/d' > ../gene_annotations/allvips_ensIds_gene.names.txt
 ```
 
 
 ## Gene definitions
 ```{r}
-genes <- fread(input = "/Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/hg19_nonRedundant_GOWINDA_noORS.bed",col.names = c("chr","start","end","name"))
+genes <- fread(input = "../gene_annotations/hg19_nonRedundant_GOWINDA_noORS.bed",col.names = c("chr","start","end","name"))
 
-ens_name <- fread("/Users/joshuaschmidt/Projects/greatApeBalSel/gene_annotations/allvips_ensIds_gene.names.txt", col.names = c("ens_id","name"))
+ens_name <- fread("../gene_annotations/allvips_ensIds_gene.names.txt", col.names = c("ens_id","name"))
 genes <-  genes[ens_name,on=.(name)][!chr%in% NA][!ens_id %in% NA]
-genes[genes[,duplicated(name)]]
 ```
 
 ```{r refine VIPS}
