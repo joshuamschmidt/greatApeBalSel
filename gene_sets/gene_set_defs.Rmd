@@ -20,38 +20,18 @@ htvips <- fread("ht_vips.txt")
 ltvips <- fread("lt_vips.txt",col.names = c("ens_id","interactions"))
 ```
 
-#### have to get ens ids for ltvips and htvips
-```{r ens ids for ltvips, cache=TRUE}
-fwrite(x=ltvips[,.(ens_id)],
-       file="../gene_annotations/ltvips_ensIds.txt",
-       sep="\n",
-       quote=F,
-       col.names = F,
-       row.names = F
-)
-fwrite(x=htvips[,.(all)],
-       file="../gene_annotations/htvips_ensIds.txt",
-       sep="\n",
-       quote=F,
-       col.names = F,
-       row.names = F
-)
+#### all ens IDS  .
 
-fwrite(x=htvips[,.(all)],
-       file="../gene_annotations/htvips_ensIds.txt",
-       sep="\n",
-       quote=F,
-       col.names = F,
-       row.names = F
-)
-```
+These are actually in hg19_nonRedundant_GOWINDA_noORS.gtf  
 
-```{bash, cache=TRUE}
-cat ../gene_annotations/htvips_ensIds_gene.names.txt ../gene_annotations/ltvips_ensIds_gene.names.txt | sort | uniq | sed '/stable/d' > ../gene_annotations/allvips_ensIds_gene.names.txt
+```{bash get all ensID}
+awk -F'[;\t ]' '{print $10"\t"$13}' ../gene_annotations/hg19_nonRedundant_GOWINDA_noORS.gtf | sed 's/\"//g' > all_genes_ensid.txt
 ```
 
 
 ## Gene definitions
+
+
 ```{r}
 genes <- fread(input = "../gene_annotations/hg19_nonRedundant_GOWINDA_noORS.bed",col.names = c("chr","start","end","name"))
 
