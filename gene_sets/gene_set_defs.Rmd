@@ -36,6 +36,14 @@ fwrite(x=htvips[,.(all)],
        col.names = F,
        row.names = F
 )
+
+fwrite(x=htvips[,.(all)],
+       file="../gene_annotations/htvips_ensIds.txt",
+       sep="\n",
+       quote=F,
+       col.names = F,
+       row.names = F
+)
 ```
 
 ```{bash, cache=TRUE}
