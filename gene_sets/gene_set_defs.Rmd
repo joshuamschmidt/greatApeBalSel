@@ -20,38 +20,25 @@ htvips <- fread("ht_vips.txt")
 ltvips <- fread("lt_vips.txt",col.names = c("ens_id","interactions"))
 ```
 
-#### have to get ens ids for ltvips and htvips
-```{r ens ids for ltvips, cache=TRUE}
-fwrite(x=ltvips[,.(ens_id)],
-       file="../gene_annotations/ltvips_ensIds.txt",
-       sep="\n",
-       quote=F,
-       col.names = F,
-       row.names = F
-)
-fwrite(x=htvips[,.(all)],
-       file="../gene_annotations/htvips_ensIds.txt",
-       sep="\n",
-       quote=F,
-       col.names = F,
-       row.names = F
-)
-```
+#### all ens IDS  .
 
-```{bash, cache=TRUE}
-cat ../gene_annotations/htvips_ensIds_gene.names.txt ../gene_annotations/ltvips_ensIds_gene.names.txt | sort | uniq | sed '/stable/d' > ../gene_annotations/allvips_ensIds_gene.names.txt
+These are actually in hg19_nonRedundant_GOWINDA_noORS.gtf  
+
+```{bash get all ensID,cache=T}
+awk -F'[;\t ]' '{print $10"\t"$13}' ../gene_annotations/hg19_nonRedundant_GOWINDA_noORS.gtf | sed 's/\"//g' > ../gene_annotations/all_genes_ensid.txt
 ```
 
 
 ## Gene definitions
-```{r}
-genes <- fread(input = "../gene_annotations/hg19_nonRedundant_GOWINDA_noORS.bed",col.names = c("chr","start","end","name"))
 
-ens_name <- fread("../gene_annotations/allvips_ensIds_gene.names.txt", col.names = c("ens_id","name"))
+
+```{r genes and ens defs,cache=TRUE,echo=FALSE}
+genes <- fread(input = "../gene_annotations/hg19_nonRedundant_GOWINDA_noORS.bed",col.names = c("chr","start","end","name"))
+ens_name <- fread("../gene_annotations/all_genes_ensid.txt", col.names = c("name","ens_id"))
 genes <-  genes[ens_name,on=.(name)][!chr%in% NA][!ens_id %in% NA]
 ```
 
-```{r refine VIPS}
+```{r refine VIPS,cache=TRUE,echo=FALSE}
 ltvips <- ltvips[genes,on=.(ens_id)]
 ltvips[,interactions:=toupper(interactions)]
 # viruses in the ltvips
@@ -84,19 +71,16 @@ for (htv in ht_names){
     vipDT_long <- rbindlist(list(vipDT_long,tmpDT))
   }
 }
-
-
-
 ```
 
 
-```{r write vip tables}
+```{r write vip tables,cache=TRUE,echo=FALSE}
 fwrite(vipDT_gowinda,file="../gene_sets/vips_GOWINDAformat.txt",sep="\t",col.names = F,row.names = F,quote = F)
 fwrite(vipDT_long,file="../gene_sets/vips_long.txt",sep="\t",col.names = T,row.names = F,quote = F)
 
 ```
 
-```{r KEGG}
+```{r create KEGG table,echo=FALSE}
 library(jsonlite)
 file="../gene_annotations/hsa00001.json"
 document <- fromJSON(txt=file,flatten = T)
@@ -104,41 +88,19 @@ document <- fromJSON(txt=file,flatten = T)
 # from hgnc... to define ens to ncbi mapping. otherwise it is a mess!
 # https://biomart.genenames.org/martform/#!/default/HGNC?datasets=hgnc_gene_mart&attributes=hgnc_gene__approved_symbol_1010%2Chgnc_gene__approved_name_1010%2Chgnc_gene__ensembl_gene__ensembl_gene_id_104%2Chgnc_gene__ncbi_gene__gene_id_1026&hgnc_gene__locus_group_1010=protein-coding+gene&hgnc_gene__status_1010=Approved
 
-hgnc <- fread("../gene_annotations/hgnc.biomart.txt",select = c("Approved symbol","NCBI gene ID","Ensembl gene ID"),col.names = c("geneidA","ncbiid","ens"),header=T)
-hgnc[duplicated(ens)]
+hgnc <- fread("../gene_annotations/hgnc.biomart.txt",select = c("Approved symbol","NCBI gene ID","Ensembl gene ID"),col.names = c("name","ncbiid","ens_id"),header=T)
+hgnc[duplicated(ens_id)]
 # ENSG00000255374
-hgnc[ens==hgnc[duplicated(ens)]$ens,geneidA]
+hgnc[ens_id==hgnc[duplicated(ens_id)]$ens_id,name]
 # [1] "TAS2R43" "TAS2R45"
 # already defind go genes
-genes <- fread("data-raw/hg19_nonredundant_noORS.gene.ens.txt",col.names = c("geneidA","ens"),header=F)
 
-genes[ens==hgnc[duplicated(ens)]$ens]$geneidA
+genes[ens_id==hgnc[duplicated(ens_id)]$ens_id]$name
 # [1] "TAS2R43"
-hgnc <- hgnc[!ens=="TAS2R45"]
-genes <- genes[hgnc,on=.(ens)][,.(geneidA,ens,ncbiid)]
+hgnc <- hgnc[!name=="TAS2R45"]
+genes_kegg <- genes[hgnc,on=.(ens_id)][,.(name,ens_id,ncbiid)]
 # so now have a consistent 1-1 mapping
 # write out ens ids from HGNC. bo to ensembl biomart hg10=9 and get gene coordinates for these!
-write.table(hgnc[,ens],file="data-raw/hgnc.ens.txt",sep="\n",col.names = F,row.names = F,quote = F)
-
-# got ens gene defs....
-hgnc.ens.defs <- fread("data-raw/hgnc.biomart.ens.chr.s.e.txt",col.names = c("ens","chr","start","end"))
-# get them all?
-hgnc[!ens %in% hgnc.ens.defs$ens]
-# 287 missing...
-# this time use HGNC symbols and try again....
-write.table(hgnc[!ens %in% hgnc.ens.defs$ens][,geneidA],file="data-raw/hgnc.ens.intitally.missingtxt",sep="\n",col.names = F,row.names = F,quote = F)
-
-hgnc.ens.defs2 <- fread("data-raw/hgnc.biomart.ens.chr.s.e.initially.missing.txt",col.names = c("ens","chr","start","end","geneidA"))
-hgnc.ens.defs2 <- hgnc.ens.defs2[geneidA %in% hgnc$geneidA]
-
-hgnc.ens.defs <- rbindlist(list(hgnc.ens.defs,hgnc.ens.defs2[,.(ens,chr,start,end)]))
-# filter for autosomes
-hgnc.ens.defs <- hgnc.ens.defs[chr %in% 1:22]
-hgnc.ens.defs <- hgnc[hgnc.ens.defs,on=.(ens)][!geneidA %in% NA][!ncbiid %in% NA][order(geneidA)]
-
-
-
-
 
 all.kegg.genes.map <- data.table()
 for (i in seq_along(document$children$children)){
@@ -156,7 +118,7 @@ for (i in seq_along(document$children$children)){
     }
   }
 }
-# genes wiht more than one ncbi id?
+# genes with more than one ncbi id?
 unique(all.kegg.genes.map[,.(ncbiid,geneid)])[,.N,by=geneid][N > 1]
 # geneid N
 # 1:    CYP2D6 2
@@ -168,11 +130,11 @@ unique(all.kegg.genes.map[,.(ncbiid,geneid)])[,.N,by=geneid][N > 1]
 all.kegg.genes.map <- all.kegg.genes.map[!geneid %in% c("olfactory", "putative") ]
 
 # for CYP2D6 and ICOS, correct ids are 1565 and 29851
-unique(all.kegg.genes.map[,.(ncbiid,geneid)])[grep("CYP2D6",geneid)]
+#unique(all.kegg.genes.map[,.(ncbiid,geneid)])[grep("CYP2D6",geneid)]
 # ncbiid geneid
 # 1:      1565 CYP2D6
 # 2: 107987479 CYP2D6
-unique(all.kegg.genes.map[,.(ncbiid,geneid)])[grep("^ICOS$",geneid)]
+#unique(all.kegg.genes.map[,.(ncbiid,geneid)])[grep("^ICOS$",geneid)]
 # ncbiid geneid
 # 1: 102723996   ICOS
 # 2:     29851   ICOS
@@ -187,10 +149,18 @@ unique(all.kegg.genes.map[,.(ncbiid,geneid)])[,.N,by=geneid][N > 1]
 # how many genes in
 # total rows
 # 46705
-all.kegg.genes.map <- all.kegg.genes.map[genes,on=.(ncbiid)]
+all.kegg.genes.map <- all.kegg.genes.map[genes_kegg,on=.(ncbiid)]
 all.kegg.genes.map <- all.kegg.genes.map[!keggid %in% NA]
 
-all.kegg.genes.map <- unique(all.kegg.genes.map[!gene %in% NA,.(id=keggid,name,gene=geneidA)])
-setkey(all.kegg.genes.map,gene)
+all.kegg.genes.map <- unique(all.kegg.genes.map[!i.name %in% NA,.(id=keggid,name,feature=i.name)])
+setkey(all.kegg.genes.map,id,feature)
+```
+
+### write out KEGG tables
+
+```{r write KEGG}
+tmpDT <- all.kegg.genes.map[,paste(feature,collapse = " "),by=.(id,name)]
+fwrite(tmpDT,file="../gene_sets/kegg_GOWINDAformat.txt",sep="\t",col.names = F,row.names = F,quote = F)
+fwrite(all.kegg.genes.map,file="../gene_sets/kegg_long.txt",sep="\t",col.names = T,row.names = F,quote = F)
 ```
 
