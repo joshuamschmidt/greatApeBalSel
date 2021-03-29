@@ -337,3 +337,8 @@ dsite = []
 for j, site in enumerate(ts.sites()):
     if j == 1:
         dsite = site
+
+
+def calc_ncd(pop_idxs, outgroup_idx, target_frequency):
+
+    return ncd
