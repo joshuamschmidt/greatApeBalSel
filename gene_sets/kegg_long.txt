@@ -1,4 +1,4 @@
-id	name	feature
+Id		FunctionName	Annotation
 hsa00010	Glycolysis_/_Gluconeogenesis	ACSS1
 hsa00010	Glycolysis_/_Gluconeogenesis	ACSS2
 hsa00010	Glycolysis_/_Gluconeogenesis	ADH1A
