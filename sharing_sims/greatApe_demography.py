@@ -5,7 +5,7 @@ import allel
 import numpy as np
 
 
-def great_ape_demography(num_replicates, sim_locus_length: int = 3000):
+def great_ape_demography(num_replicates, sim_locus_length):
     n_ms: int = 10000
     generation_time: int = 20
     m_scale = 4 * n_ms
@@ -255,7 +255,7 @@ def great_ape_demography(num_replicates, sim_locus_length: int = 3000):
         mutation_rate=1e-9,
         num_replicates=num_replicates
     )
-    return (tree_seq)
+    return tree_seq
 
 
 sample_config = [1, 8, 12, 20, 8, 26, 46, 6, 10, 10, 1]
@@ -267,11 +267,15 @@ sliding_windows_starts = np.arange(1, locus_length, window_slide)
 
 
 def tree():
-    tree_seq = great_ape_demography()
-    tree = tree_seq.first()
-    print(tree.draw(format="unicode"))
+    tree_seq = great_ape_demography(1, 30000)
+    for a, tree_sequence in enumerate(tree_seq):
+        if a == 0:
+            first_tree = tree_sequence.first()
+            print(first_tree.draw(format="unicode"))
 
-ts = great_ape_demography(num_replicates=None, sim_locus_length=3000)
+
+rep_ts = great_ape_demography(1, sim_locus_length=30000)
+
 for j, ts in enumerate(rep_ts):
     print(j)
     # get the index for the genomes sampled from each population
@@ -305,7 +309,7 @@ for j, ts in enumerate(rep_ts):
 
 # get all the allele counts.
 sample_config = [1, 8, 12, 20, 8, 26, 46, 6, 10, 10, 1]
-genotypes=ts.genotype_matrix()
+genotypes = ts.genotype_matrix()
 pops = [pop.id for pop in ts.populations()]
 pop_indices = [ts.samples(population=pop) for pop in pops]
 # create a haplotype array in allele from numpy arrays of 0s/1s
@@ -318,18 +322,18 @@ allele_frequencies = []
 for j, nchr in enumerate(sample_config):
     allele_frequencies.append(allele_counts[j] / nchr)
 
-allele_counts[2]/12
+allele_counts[2] / 12
 # need to keep track of sites that are duplicated.....
 all_sites = []
 for j, site in enumerate(ts.sites()):
     physpos = int(round(site.position))
-    if physpos==0:
-        physpos=1
+    if physpos == 0:
+        physpos = 1
     while physpos in all_sites:
         physpos = physpos + 1
     all_sites.append(physpos)
 
 dsite = []
 for j, site in enumerate(ts.sites()):
-    if j==1:
+    if j == 1:
         dsite = site
